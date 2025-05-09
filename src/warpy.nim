@@ -60,5 +60,8 @@ proc getStatus*(
   api: Warpy,
 ): GetStatus =
   ## get the status of the server
+  
+  # `datasource` is an allowed query parameter, but `tranquility` is the only valid value, and is the default
+
   let resp = api.get("/status")
   result = resp.body.fromJson(GetStatus)
