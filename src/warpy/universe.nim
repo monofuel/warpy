@@ -82,3 +82,28 @@ proc getItemCategory*(
   let resp = api.get("/universe/categories/" & $categoryId & "?language=" & $language, ifNoneMatch)
   result = newWarpyResponse[ItemCategory](resp)
 
+proc getConstellations*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[int32]] =
+  ## get all constellation IDs.
+  ## This route expires daily at 1105
+  let resp = api.get("/universe/constellations", ifNoneMatch)
+  result = newWarpyResponse[seq[int32]](resp)
+
+type
+  Constellation* = ref object
+    constellationId*: int32
+    name*: string
+    position*: EsiPosition
+    regionId*: int32
+    systems*: seq[int32]
+
+proc getConstellation*(
+  api: Warpy,
+  constellationId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[Constellation] =
+  ## get constellation information
+  let resp = api.get("/universe/constellations/" & $constellationId, ifNoneMatch)
+  result = newWarpyResponse[Constellation](resp)

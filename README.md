@@ -38,8 +38,8 @@
   - [x] bloodlines
   - [x] categories
   - [x] category
-  - [ ] constellations
-  - [ ] constellation
+  - [x] constellations
+  - [x] constellation
   - [ ] factions
   - [ ] graphics
   - [ ] graphic

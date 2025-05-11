@@ -63,6 +63,21 @@ suite "Public ESI API":
       assert resp.body.get.published == true
       assert resp.body.get.groups.len > 0
 
+    test "/universe/constellations":
+      let api = newWarpy()
+      let resp = api.getConstellations()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+      
+    test "/universe/constellations/20000205":
+      let api = newWarpy()
+      let resp = api.getConstellation(20000205)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.constellationId == 20000205
+      assert resp.body.get.name == "Minnen"
+
   suite "Meta":
     test "/verify":
       let api = newWarpy()
