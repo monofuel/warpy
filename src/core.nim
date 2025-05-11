@@ -44,6 +44,10 @@ type
     v4 = "v4",
     v5 = "v5",
     v6 = "v6"
+  EsiPosition* = ref object
+    x*: float64
+    y*: float64
+    z*: float64
 
 const
   DefaultUserAgent = "warpy"

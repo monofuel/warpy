@@ -34,7 +34,7 @@
 - [x] Status
 - [ ] Universe
   - [x] Ancestries
-  - [ ] asteroid belts
+  - [x] asteroid belts
   - [ ] bloodlines
   - [ ] categories
   - [ ] category

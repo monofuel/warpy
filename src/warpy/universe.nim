@@ -26,3 +26,26 @@ proc getAncestries*(
 
   if resp.code == 200:
     result.body = some(resp.body.fromJson(GetAncestry))
+
+type
+  GetAsteroidBelt* = ref object
+    name*: string
+    position*: EsiPosition
+    systemId*: int32
+
+proc getAsteroidBelts*(
+  api: Warpy,
+  asteroidBeltId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[GetAsteroidBelt] =
+  ## get asteroid belt information
+  let resp = api.get("/universe/asteroid_belts/" & $asteroidBeltId, ifNoneMatch)
+  result = WarpyResponse[GetAsteroidBelt]()
+  result.code = resp.code
+  result.cacheControl = resp.headers["Cache-Control"]
+  result.etag = resp.headers["ETag"]
+  result.expires = resp.headers["Expires"]
+  result.lastModified = resp.headers["Last-Modified"]
+
+  if resp.code == 200:
+    result.body = some(resp.body.fromJson(GetAsteroidBelt))
