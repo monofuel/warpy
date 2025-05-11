@@ -1,3 +1,75 @@
 # Warpy
 
 - EVE ESI API client library for Nim
+- ESI Documentation: https://esi.evetech.net/ui/
+
+
+## Endpoints
+
+- [ ] Alliance
+- [ ] Assets
+- [ ] Calendar
+- [ ] Character
+- [ ] Clones
+- [ ] Contacts
+- [ ] Contracts
+- [ ] Corporation
+- [ ] Dogma
+- [ ] Faction Warfare
+- [ ] Fittings
+- [ ] Fleets
+- [ ] Incursions
+- [ ] Industry
+- [ ] Insurance
+- [ ] Killmails
+- [ ] Location
+- [ ] Loyalty
+- [ ] Mail
+- [ ] Market
+- [ ] Planetary Interaction
+- [ ] Routes
+- [ ] Search
+- [ ] Skills
+- [ ] Sovereignty
+- [x] Status
+- [ ] Universe
+  - [x] Ancestries
+  - [ ] asteroid belts
+  - [ ] bloodlines
+  - [ ] categories
+  - [ ] category
+  - [ ] constellations
+  - [ ] constellation
+  - [ ] factions
+  - [ ] graphics
+  - [ ] graphic
+  - [ ] groups
+  - [ ] group
+  - [ ] ids
+  - [ ] moons
+  - [ ] names (ids)
+  - [ ] planets
+  - [ ] races
+  - [ ] regions
+  - [ ] region
+  - [ ] stargates
+  - [ ] stars
+  - [ ] stations
+  - [ ] structures
+  - [ ] structure
+  - [ ] system jumps
+  - [ ] system kills
+  - [ ] systems
+  - [ ] system
+  - [ ] types
+  - [ ] type
+- [ ] User Interface
+- [ ] Wallet
+- [ ] Wars
+
+- [ ] Meta
+  - headers (not implementing)
+  - [x] ping
+  - [x] status.json
+  - [ ] verify
+  - [x] versions
