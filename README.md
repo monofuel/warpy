@@ -36,8 +36,8 @@
   - [x] Ancestries
   - [x] asteroid belts
   - [x] bloodlines
-  - [ ] categories
-  - [ ] category
+  - [x] categories
+  - [x] category
   - [ ] constellations
   - [ ] constellation
   - [ ] factions

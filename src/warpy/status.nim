@@ -16,12 +16,4 @@ proc getStatus*(
   # `datasource` is an allowed query parameter, but `tranquility` is the only valid value, and is the default
 
   let resp = api.get("/status", ifNoneMatch)
-  result = WarpyResponse[GetStatus]()
-  result.code = resp.code
-  result.cacheControl = resp.headers["Cache-Control"]
-  result.etag = resp.headers["ETag"]
-  result.expires = resp.headers["Expires"]
-  result.lastModified = resp.headers["Last-Modified"]
-
-  if resp.code == 200:
-    result.body = some(resp.body.fromJson(GetStatus))
+  result = newWarpyResponse[GetStatus](resp)

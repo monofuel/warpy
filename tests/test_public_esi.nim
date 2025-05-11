@@ -45,6 +45,23 @@ suite "Public ESI API":
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
+    
+    test "/universe/categories":
+      let api = newWarpy()
+      let resp = api.getItemCategories()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
+    test "/universe/categories/16":
+      let api = newWarpy()
+      let resp = api.getItemCategory(16)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.categoryId == 16
+      assert resp.body.get.name == "Skill"
+      assert resp.body.get.published == true
+      assert resp.body.get.groups.len > 0
 
   suite "Meta":
     test "/verify":

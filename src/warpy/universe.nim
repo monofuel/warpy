@@ -17,15 +17,7 @@ proc getAncestries*(
 ): WarpyResponse[GetAncestry] =
   ## get all character ancestries
   let resp = api.get("/universe/ancestries?language=" & $language, ifNoneMatch)
-  result = WarpyResponse[GetAncestry]()
-  result.code = resp.code
-  result.cacheControl = resp.headers["Cache-Control"]
-  result.etag = resp.headers["ETag"]
-  result.expires = resp.headers["Expires"]
-  result.lastModified = resp.headers["Last-Modified"]
-
-  if resp.code == 200:
-    result.body = some(resp.body.fromJson(GetAncestry))
+  result = newWarpyResponse[GetAncestry](resp)
 
 type
   GetAsteroidBelt* = ref object
@@ -40,15 +32,7 @@ proc getAsteroidBelts*(
 ): WarpyResponse[GetAsteroidBelt] =
   ## get asteroid belt information
   let resp = api.get("/universe/asteroid_belts/" & $asteroidBeltId, ifNoneMatch)
-  result = WarpyResponse[GetAsteroidBelt]()
-  result.code = resp.code
-  result.cacheControl = resp.headers["Cache-Control"]
-  result.etag = resp.headers["ETag"]
-  result.expires = resp.headers["Expires"]
-  result.lastModified = resp.headers["Last-Modified"]
-
-  if resp.code == 200:
-    result.body = some(resp.body.fromJson(GetAsteroidBelt))
+  result = newWarpyResponse[GetAsteroidBelt](resp)
 
 type
   Bloodline* = ref object
@@ -71,12 +55,30 @@ proc getBloodlines*(
 ): WarpyResponse[GetBloodlines] =
   ## get all bloodlines
   let resp = api.get("/universe/bloodlines", ifNoneMatch)
-  result = WarpyResponse[GetBloodlines]()
-  result.code = resp.code
-  result.cacheControl = resp.headers["Cache-Control"]
-  result.etag = resp.headers["ETag"]
-  result.expires = resp.headers["Expires"]
-  result.lastModified = resp.headers["Last-Modified"]
+  result = newWarpyResponse[GetBloodlines](resp)
 
-  if resp.code == 200:
-    result.body = some(resp.body.fromJson(GetBloodlines))
+proc getItemCategories*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[int32]] =
+  ## get all item category IDs
+  let resp = api.get("/universe/categories", ifNoneMatch)
+  result = newWarpyResponse[seq[int32]](resp)
+
+type
+  ItemCategory* = ref object
+    categoryId*: int32
+    groups*: seq[int32]
+    name*: string
+    published*: bool
+
+proc getItemCategory*(
+  api: Warpy,
+  categoryId: int32,
+  language: EsiLanguage = en,
+  ifNoneMatch: string = ""
+): WarpyResponse[ItemCategory] =
+  ## get item category information
+  let resp = api.get("/universe/categories/" & $categoryId & "?language=" & $language, ifNoneMatch)
+  result = newWarpyResponse[ItemCategory](resp)
+

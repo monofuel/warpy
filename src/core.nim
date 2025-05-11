@@ -95,3 +95,15 @@ proc get*(
       &"API call {path} failed: {resp.code} {resp.body}"
     )
   result = resp
+
+proc newWarpyResponse*[T](resp: Response): WarpyResponse[T] =
+  ## Build a warpy response based on the curly response.
+  ## pull out all the standard headers, and for a 200 response, parse the body as json.
+  result = WarpyResponse[T]()
+  result.code = resp.code
+  result.cacheControl = resp.headers["Cache-Control"]
+  result.etag = resp.headers["ETag"]
+  result.expires = resp.headers["Expires"]
+  result.lastModified = resp.headers["Last-Modified"]
+  if resp.code == 200:
+    result.body = some(resp.body.fromJson(T))
