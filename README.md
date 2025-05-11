@@ -35,7 +35,7 @@
 - [ ] Universe
   - [x] Ancestries
   - [x] asteroid belts
-  - [ ] bloodlines
+  - [x] bloodlines
   - [ ] categories
   - [ ] category
   - [ ] constellations

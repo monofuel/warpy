@@ -49,3 +49,34 @@ proc getAsteroidBelts*(
 
   if resp.code == 200:
     result.body = some(resp.body.fromJson(GetAsteroidBelt))
+
+type
+  Bloodline* = ref object
+    bloodlineId*: int32
+    charisma*: int32
+    corporationId*: int32
+    description*: string
+    intelligence*: int32
+    memory*: int32
+    name*: string
+    perception*: int32
+    raceId*: int32
+    shipTypeId*: Option[int32] # may be null
+    willpower*: int32
+  GetBloodlines* = seq[Bloodline]
+
+proc getBloodlines*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[GetBloodlines] =
+  ## get all bloodlines
+  let resp = api.get("/universe/bloodlines", ifNoneMatch)
+  result = WarpyResponse[GetBloodlines]()
+  result.code = resp.code
+  result.cacheControl = resp.headers["Cache-Control"]
+  result.etag = resp.headers["ETag"]
+  result.expires = resp.headers["Expires"]
+  result.lastModified = resp.headers["Last-Modified"]
+
+  if resp.code == 200:
+    result.body = some(resp.body.fromJson(GetBloodlines))

@@ -38,6 +38,13 @@ suite "Public ESI API":
       assert resp.code == 200
       assert resp.body.isSome
       assert toJson(resp.body.get) == """{"name":"Nonni II - Asteroid Belt 1","position":{"x":-65319198720.0,"y":9657507840.0,"z":155492229120.0},"systemId":30001401}"""
+    
+    test "/universe/bloodlines":
+      let api = newWarpy()
+      let resp = api.getBloodlines()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
 
   suite "Meta":
     test "/verify":
