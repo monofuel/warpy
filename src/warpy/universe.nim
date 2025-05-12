@@ -102,8 +102,60 @@ type
 proc getConstellation*(
   api: Warpy,
   constellationId: int32,
+  language: EsiLanguage = en,
   ifNoneMatch: string = ""
 ): WarpyResponse[Constellation] =
   ## get constellation information
-  let resp = api.get("/universe/constellations/" & $constellationId, ifNoneMatch)
+  let resp = api.get("/universe/constellations/" & $constellationId & "?language=" & $language, ifNoneMatch)
   result = newWarpyResponse[Constellation](resp)
+
+type
+  Faction* = ref object
+    corporationId*: Option[int32]
+    description*: string
+    factionId*: int32
+    isUnique*: bool
+    militiaCorporationId*: Option[int32]
+    name*: string
+    sizeFactor*: float
+    solarSystemId*: Option[int32]
+    stationCount*: int32
+    stationSystemCount*: int32
+  GetFactions* = seq[Faction]
+
+proc getFactions*(
+  api: Warpy,
+  language: EsiLanguage = en,
+  ifNoneMatch: string = ""
+): WarpyResponse[GetFactions] =
+  ## get all factions
+  let resp = api.get("/universe/factions?language=" & $language, ifNoneMatch)
+  result = newWarpyResponse[GetFactions](resp)
+
+proc getGraphics*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[int32]] =
+  ## get list of graphic IDs
+  let resp = api.get("/universe/graphics/", ifNoneMatch)
+  result = newWarpyResponse[seq[int32]](resp)
+
+type
+  Graphic* = ref object
+    collisionFile*: string
+    graphicFile*: string
+    graphicId*: int32
+    iconFolder*: string
+    sofDna*: string
+    sofFationName*: string
+    sofHullName*: string
+    sofRaceName*: string
+
+proc getGraphic*(
+  api: Warpy,
+  graphicId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[Graphic] =
+  ## get graphic information
+  let resp = api.get("/universe/graphics/" & $graphicId, ifNoneMatch)
+  result = newWarpyResponse[Graphic](resp)

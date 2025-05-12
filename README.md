@@ -40,9 +40,9 @@
   - [x] category
   - [x] constellations
   - [x] constellation
-  - [ ] factions
-  - [ ] graphics
-  - [ ] graphic
+  - [x] factions
+  - [x] graphics
+  - [x] graphic
   - [ ] groups
   - [ ] group
   - [ ] ids

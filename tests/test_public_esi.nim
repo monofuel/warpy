@@ -78,6 +78,28 @@ suite "Public ESI API":
       assert resp.body.get.constellationId == 20000205
       assert resp.body.get.name == "Minnen"
 
+    test "/universe/factions":
+      let api = newWarpy()
+      let resp = api.getFactions()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
+    test "/universe/graphics":
+      let api = newWarpy()
+      let resp = api.getGraphics()  
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
+    test "/universe/graphics/42":
+      let api = newWarpy()
+      let resp = api.getGraphic(42) # caracal
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.graphicId == 42
+      assert resp.body.get.sofHullName == "cc3_t1"
+
   suite "Meta":
     test "/verify":
       let api = newWarpy()
