@@ -270,3 +270,173 @@ proc getPlanet*(
   ## get information for a planet
   let resp = api.get("/universe/planets/" & $planetId, ifNoneMatch)
   result = newWarpyResponse[GetPlanet](resp)
+
+type
+  Race* = ref object
+    allianceId*: int32
+    description*: string
+    name*: string
+    raceId*: int32
+
+proc getRaces*(
+  api: Warpy,
+  language: EsiLanguage = en,
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[Race]] =
+  ## get all races
+  let resp = api.get("/universe/races?language=" & $language, ifNoneMatch)
+  result = newWarpyResponse[seq[Race]](resp)
+
+proc getRegions*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[int32]] =
+  ## get all region IDs
+  let resp = api.get("/universe/regions", ifNoneMatch)
+  result = newWarpyResponse[seq[int32]](resp)
+
+type
+  Region* = ref object
+    regionId*: int32
+    description*: string
+    name*: string
+    constellations*: seq[int32]
+
+proc getRegion*(
+  api: Warpy,
+  regionId: int32,
+  language: EsiLanguage = en,
+  ifNoneMatch: string = ""
+): WarpyResponse[Region] =
+  ## get information for a region
+  let resp = api.get("/universe/regions/" & $regionId & "?language=" & $language, ifNoneMatch)
+  result = newWarpyResponse[Region](resp)
+
+type
+  StargateDestination* = ref object
+    stargateId*: int32
+    systemId*: int32
+  Stargate* = ref object
+    destination*: StargateDestination
+    name*: string
+    position*: EsiPosition
+    stargateId*: int32
+    systemId*: int32
+    typeId*: int32
+
+proc getStargate*(
+  api: Warpy,
+  stargateId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[Stargate] =
+  ## get information for a stargate
+  let resp = api.get("/universe/stargates/" & $stargateId, ifNoneMatch)
+  result = newWarpyResponse[Stargate](resp)
+
+type
+  Star* = ref object
+    age*: int64
+    luminosity*: float
+    name*: string
+    radius*: int64
+    solarSystemId*: int32
+    spectralClass*: string
+    temperature*: int32
+    typeId*: int32
+
+proc getStar*(
+  api: Warpy,
+  starId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[Star] =
+  ## get information for a star
+  let resp = api.get("/universe/stars/" & $starId, ifNoneMatch)
+  result = newWarpyResponse[Star](resp)
+
+type
+  Station* = ref object
+    maxDockableShipVolume*: float
+    name*: string
+    officeRentalCost*: float
+    owner*: int32
+    position*: EsiPosition
+    raceId*: int32
+    reprocessingEfficiency*: float
+    reprocessingStationsTake*: float
+    services*: seq[string]
+    stationId*: int32
+    systemId*: int32
+    typeId*: int32
+    
+proc getStation*(
+  api: Warpy,
+  stationId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[Station] =
+  ## get information for a station
+  let resp = api.get("/universe/stations/" & $stationId, ifNoneMatch)
+  result = newWarpyResponse[Station](resp)
+
+# NB. Structure IDs are int64!
+
+proc getStructures*(
+  api: Warpy,
+  filter: string = "", # can filter to structures with "market" or "manufacturing_basic"
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[int64]] =
+  ## list public structures.
+  ## will return up to 10k structure IDs.
+  var url = "/universe/structures"
+  if filter != "":
+    url.add "?filter=" & filter
+  let resp = api.get(url, ifNoneMatch)
+  result = newWarpyResponse[seq[int64]](resp)
+
+type
+  Structure* = ref object
+    name*: string
+    ownerId*: int32
+    position*: EsiPosition
+    solarSystemId*: int32
+    typeId*: int32
+
+proc getStructure*(
+  api: Warpy,
+  structureId: int64,
+  ifNoneMatch: string = ""
+): WarpyResponse[Structure] =
+  ## get information for a structure
+  let resp = api.get("/universe/structures/" & $structureId, ifNoneMatch)
+  result = newWarpyResponse[Structure](resp)
+
+type
+  SystemJumps* = ref object
+    shipJumps*: int32
+    systemId*: int32
+  GetSystemJumps* = seq[SystemJumps]
+
+proc getSystemJumps*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[GetSystemJumps] =
+  ## get number of jumps in the last hour, for every solar system, excluding wormhole space
+  ## systems without any jumps are not included.
+  let resp = api.get("/universe/system_jumps", ifNoneMatch)
+  result = newWarpyResponse[GetSystemJumps](resp)
+
+type
+  SystemKills* = ref object
+    npcKills*: int32
+    podKills*: int32
+    shipKills*: int32
+    systemId*: int32
+  GetSystemKills* = seq[SystemKills]
+
+proc getSystemKills*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[GetSystemKills] =
+  ## get number of ship, pod, and NPC kills in the last hour, for every solar system, excluding wormhole space,
+  ## systems without any kills are not included.
+  let resp = api.get("/universe/system_kills", ifNoneMatch)
+  result = newWarpyResponse[GetSystemKills](resp)

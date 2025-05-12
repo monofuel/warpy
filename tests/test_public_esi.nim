@@ -3,9 +3,12 @@ import std/[unittest, options], warpy, jsony
 
 
 suite "Public ESI API":
+  var api: Warpy
+  setup:
+    api = newWarpy()
+
   suite "Status":
     test "/status":
-      let api = newWarpy()
       let resp = api.getStatus()
       assert resp.code == 200
       assert resp.body.isSome
@@ -13,7 +16,6 @@ suite "Public ESI API":
 
     test "/status with etag":
       # this test verifies that etags work properly
-      let api = newWarpy()
       let resp1 = api.getStatus()
       assert resp1.code == 200
       assert resp1.body.isSome
@@ -24,7 +26,6 @@ suite "Public ESI API":
 
   suite "Universe":
     test "/universe/ancestries":
-      let api = newWarpy()
       # TODO test languages
       let resp = api.getAncestries()
       assert resp.code == 200
@@ -32,29 +33,25 @@ suite "Public ESI API":
       assert resp.body.get.len > 0
     
     test "/universe/asteroid_belts":
-      let api = newWarpy()
       const asteroidBeltId = 40089226 # Belt in the Nonni system
       let resp = api.getAsteroidBelts(asteroidBeltId)
       assert resp.code == 200
       assert resp.body.isSome
       assert toJson(resp.body.get) == """{"name":"Nonni II - Asteroid Belt 1","position":{"x":-65319198720.0,"y":9657507840.0,"z":155492229120.0},"systemId":30001401}"""
     
-    test "/universe/bloodlines":
-      let api = newWarpy()
+    test "/universe/bloodlines": 
       let resp = api.getBloodlines()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
     
     test "/universe/categories":
-      let api = newWarpy()
       let resp = api.getItemCategories()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
 
     test "/universe/categories/16":
-      let api = newWarpy()
       let resp = api.getItemCategory(16)
       assert resp.code == 200
       assert resp.body.isSome
@@ -64,14 +61,12 @@ suite "Public ESI API":
       assert resp.body.get.groups.len > 0
 
     test "/universe/constellations":
-      let api = newWarpy()
       let resp = api.getConstellations()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
       
     test "/universe/constellations/20000205":
-      let api = newWarpy()
       let resp = api.getConstellation(20000205)
       assert resp.code == 200
       assert resp.body.isSome
@@ -79,21 +74,18 @@ suite "Public ESI API":
       assert resp.body.get.name == "Minnen"
 
     test "/universe/factions":
-      let api = newWarpy()
       let resp = api.getFactions()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
 
     test "/universe/graphics":
-      let api = newWarpy()
       let resp = api.getGraphics()  
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
 
     test "/universe/graphics/42":
-      let api = newWarpy()
       let resp = api.getGraphic(42) # caracal
       assert resp.code == 200
       assert resp.body.isSome
@@ -101,14 +93,12 @@ suite "Public ESI API":
       assert resp.body.get.sofHullName == "cc3_t1"
 
     test "/universe/groups":
-      let api = newWarpy()
       let resp = api.getGroups()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
 
     test "/universe/groups/26":
-      let api = newWarpy()
       let resp = api.getGroup(26)
       assert resp.code == 200
       assert resp.body.isSome
@@ -116,7 +106,6 @@ suite "Public ESI API":
       assert resp.body.get.name == "Cruiser"
 
     test "/universe/ids":
-      let api = newWarpy()
       let resp = api.bulkNamesToIds(@["Caracal", "Muninn"])
       assert resp.code == 200
       assert resp.body.isSome
@@ -127,7 +116,6 @@ suite "Public ESI API":
       assert resp.body.get.inventoryTypes[1].name == "Muninn"
 
     test "/universe/moons/40089228":
-      let api = newWarpy()
       let resp = api.getMoon(40089228)
       assert resp.code == 200
       assert resp.body.isSome
@@ -135,7 +123,6 @@ suite "Public ESI API":
       assert resp.body.get.name == "Nonni III - Moon 1"
 
     test "/universe/names":
-      let api = newWarpy()
       let resp = api.bulkIdsToNames(@[621.int32, 12015.int32])
       assert resp.code == 200
       assert resp.body.isSome
@@ -148,30 +135,96 @@ suite "Public ESI API":
       assert resp.body.get[1].category == "inventory_type"
       
     test "/universe/planets/40089224":
-      let api = newWarpy()
       let resp = api.getPlanet(40089224)
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.planetId == 40089224
       assert resp.body.get.name == "Nonni I"
 
+    test "/universe/races":
+      let resp = api.getRaces()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+      
+    test "/universe/regions":
+      let resp = api.getRegions()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
+    test "/universe/regions/10000002":
+      let resp = api.getRegion(10000002)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.regionId == 10000002
+      assert resp.body.get.name == "The Forge"
+
+    test "/universe/stargates/50001692":
+      let resp = api.getStargate(50001692)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.stargateId == 50001692
+      assert resp.body.get.name == "Stargate (Aunenen)"
+
+    test "/universe/stars/40089223":
+      let resp = api.getStar(40089223)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.name == "Nonni - Star"
+
+    test "/universe/stations/60000982":
+      let resp = api.getStation(60000982)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.stationId == 60000982
+      assert resp.body.get.name == "Nonni I - Kaalakiota Corporation Factory"
+
+    test "/universe/structures":
+      let resp = api.getStructures()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+      echo toJson(resp.body.get[0])
+
+    # TODO `getStructure()` requires an access token, even for public structures!
+    # test "/universe/structures/{0]":
+    #   # Structures are player-owned and may change over time, so I'm just going to assume we can query for the first one.
+    #   let resp1 = api.getStructures()
+    #   assert resp1.code == 200
+    #   assert resp1.body.isSome
+    #   let structureId = resp1.body.get[0]
+    #   let resp = api.getStructure(structureId)
+    #   assert resp.code == 200
+    #   assert resp.body.isSome
+    #   echo toJson(resp.body.get.name)
+      
+    test "/universe/system_jumps":
+      let resp = api.getSystemJumps()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
+    test "/universe/system_kills":
+      let resp = api.getSystemKills()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
   suite "Meta":
     test "/verify":
-      let api = newWarpy()
       let resp = api.ping()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get == "ok"
     
     test "/status.json":
-      let api = newWarpy()
       let resp = api.statusJson()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
 
     test "/versions":
-      let api = newWarpy()
       let resp = api.getVersions()
       assert resp.code == 200
       assert resp.body.isSome

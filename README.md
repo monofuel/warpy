@@ -49,16 +49,16 @@
   - [x] moons
   - [x] names (ids)
   - [x] planets
-  - [ ] races
-  - [ ] regions
-  - [ ] region
-  - [ ] stargates
-  - [ ] stars
-  - [ ] stations
-  - [ ] structures
-  - [ ] structure
-  - [ ] system jumps
-  - [ ] system kills
+  - [x] races
+  - [x] regions
+  - [x] region
+  - [x] stargates
+  - [x] stars
+  - [x] stations
+  - [x] structures
+  - [x] structure
+  - [x] system jumps
+  - [x] system kills
   - [ ] systems
   - [ ] system
   - [ ] types
