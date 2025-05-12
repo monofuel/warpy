@@ -68,7 +68,6 @@ proc newWarpy*(
   result.host = host
   result.endpointVersion = endpointVersion
   result.baseUrl = host & "/" & $endpointVersion
-  echo result.baseUrl
   result.userAgent = userAgent
   result.curlTimeout = curlTimeout
 
@@ -107,8 +106,6 @@ proc post*(
   headers["User-Agent"] = api.userAgent
   headers["Accept"] = "application/json"
   headers["Content-Type"] = "application/json"
-
-  echo body
 
   let resp = api.curly.post(api.baseUrl & path, headers, body, api.curlTimeout)
   if resp.code != 200:

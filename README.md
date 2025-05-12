@@ -46,9 +46,9 @@
   - [x] groups
   - [x] group
   - [x] ids
-  - [ ] moons
-  - [ ] names (ids)
-  - [ ] planets
+  - [x] moons
+  - [x] names (ids)
+  - [x] planets
   - [ ] races
   - [ ] regions
   - [ ] region

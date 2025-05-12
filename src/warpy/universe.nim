@@ -216,3 +216,57 @@ proc bulkNamesToIds*(
   # POST /universe/ids/
   let resp = api.post("/universe/ids?language=" & $language, toJson(names))
   result = newWarpyResponse[BulkNamesToIds](resp)
+
+type
+  GetMoon* = ref object
+    moonId*: int32
+    name*: string
+    position*: EsiPosition
+    systemId*: int32
+  GetMoons* = seq[GetMoon]
+
+proc getMoon*(
+  api: Warpy,
+  moonId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[GetMoon] =
+  ## get information for a moon
+  let resp = api.get("/universe/moons/" & $moonId, ifNoneMatch)
+  result = newWarpyResponse[GetMoon](resp)
+
+type
+  IdToName* = ref object
+    category*: string
+    id*: int32
+    name*: string
+  BulkIdsToNames* = seq[IdToName]
+
+proc bulkIdsToNames*(
+  api: Warpy,
+  ids: seq[int32],
+): WarpyResponse[BulkIdsToNames] =
+  ## bulk get names from a list of IDs.
+  ## all IDs must resolve to names, or none are returned.
+
+  assert ids.len > 0
+  assert ids.len <= 1000
+   
+  let resp = api.post("/universe/names/", toJson(ids))
+  result = newWarpyResponse[BulkIdsToNames](resp)
+
+type
+  GetPlanet* = ref object
+    name*: string
+    planetId*: int32
+    position*: EsiPosition
+    systemId*: int32
+    typeId*: int32
+
+proc getPlanet*(
+  api: Warpy,
+  planetId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[GetPlanet] =
+  ## get information for a planet
+  let resp = api.get("/universe/planets/" & $planetId, ifNoneMatch)
+  result = newWarpyResponse[GetPlanet](resp)

@@ -126,29 +126,34 @@ suite "Public ESI API":
       assert resp.body.get.inventoryTypes[1].id == 12015
       assert resp.body.get.inventoryTypes[1].name == "Muninn"
 
-#       {
-#   "characters": [
-#     {
-#       "id": 95261047,
-#       "name": "Caracal"
-#     },
-#     {
-#       "id": 219948150,
-#       "name": "Muninn"
-#     }
-#   ],
-#   "inventory_types": [
-#     {
-#       "id": 621,
-#       "name": "Caracal"
-#     },
-#     {
-#       "id": 12015,
-#       "name": "Muninn"
-#     }
-#   ]
-# }
+    test "/universe/moons/40089228":
+      let api = newWarpy()
+      let resp = api.getMoon(40089228)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.moonId == 40089228
+      assert resp.body.get.name == "Nonni III - Moon 1"
+
+    test "/universe/names":
+      let api = newWarpy()
+      let resp = api.bulkIdsToNames(@[621.int32, 12015.int32])
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len == 2
+      assert resp.body.get[0].id == 621
+      assert resp.body.get[0].name == "Caracal"
+      assert resp.body.get[0].category == "inventory_type"
+      assert resp.body.get[1].id == 12015
+      assert resp.body.get[1].name == "Muninn"
+      assert resp.body.get[1].category == "inventory_type"
       
+    test "/universe/planets/40089224":
+      let api = newWarpy()
+      let resp = api.getPlanet(40089224)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.planetId == 40089224
+      assert resp.body.get.name == "Nonni I"
 
   suite "Meta":
     test "/verify":
