@@ -1,5 +1,5 @@
 # test Public ESI API endpoints
-import std/[unittest, options], warpy, jsony
+import std/[unittest, os, strformat, options], warpy, jsony
 
 
 suite "Public ESI API":
@@ -185,7 +185,6 @@ suite "Public ESI API":
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
-      echo toJson(resp.body.get[0])
 
     # TODO `getStructure()` requires an access token, even for public structures!
     # test "/universe/structures/{0]":
@@ -223,6 +222,36 @@ suite "Public ESI API":
       assert resp.body.isSome
       assert resp.body.get.systemId == 30001401
       assert resp.body.get.name == "Nonni"
+
+    test "/universe/types":
+      let resp = api.getTypes()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+      assert resp.xpages > 5 # should be about >50 pages or so
+    
+    test "/universe/types all pages":
+      var page = 1.int32
+      var resp = api.getTypes(page)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+      var xpages = resp.xpages
+      while page < xpages:
+        sleep(500) # be polite
+        page += 1
+        echo &"fetching types page {page}"
+        resp = api.getTypes(page)
+        assert resp.code == 200
+        assert resp.body.isSome
+        assert resp.body.get.len > 0
+
+    test "/universe/types/621":
+      let resp = api.getType(621)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.typeId == 621
+      assert resp.body.get.name == "Caracal"
 
   suite "Meta":
     test "/verify":

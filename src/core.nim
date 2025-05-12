@@ -1,5 +1,5 @@
 import
-  std/[strformat, options, options],
+  std/[strformat, strutils, options, options],
   curly, jsony, oats
 
 # https://esi.evetech.net/ui/
@@ -25,6 +25,7 @@ type
     etag*: string         # RFC7232 ETag for change detection
     expires*: string      # RFC7231 Expires header
     lastModified*: string # RFC7231 Last-Modified header
+    xpages*: int          # maximum page number (only applies to some endpoints)
   
   EsiLanguage* = enum
     en = "en",
@@ -124,5 +125,11 @@ proc newWarpyResponse*[T](resp: Response): WarpyResponse[T] =
   result.etag = resp.headers["ETag"]
   result.expires = resp.headers["Expires"]
   result.lastModified = resp.headers["Last-Modified"]
+
+  if resp.headers["X-Pages"] != "":
+    result.xpages = resp.headers["X-Pages"].parseInt
+
   if resp.code == 200:
     result.body = some(resp.body.fromJson(T))
+
+

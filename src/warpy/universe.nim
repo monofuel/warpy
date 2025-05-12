@@ -477,3 +477,47 @@ proc getSystem*(
   ## get information for a solar system
   let resp = api.get("/universe/systems/" & $systemId, ifNoneMatch)
   result = newWarpyResponse[System](resp)
+
+proc getTypes*(
+  api: Warpy,
+  page: int32 = 1,
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[int32]] =
+  ## get all type IDs
+  let resp = api.get("/universe/types?page=" & $page, ifNoneMatch)
+  result = newWarpyResponse[seq[int32]](resp)
+
+type
+  DogmaAttribute* = ref object
+    attributeId*: int32
+    value*: float
+  DogmaEffect* = ref object
+    effectId*: int32
+    isDefault*: bool
+  Type* = ref object
+    capacity*: float
+    description*: string
+    dogmaAttributes*: seq[DogmaAttribute]
+    dogmaEffects*: seq[DogmaEffect]
+    graphicId*: int32
+    groupId*: int32
+    iconId*: int32
+    marketGroupID*: int32
+    mass*: float
+    name*: string
+    packagedVolume*: float
+    portionSize*: int32
+    published*: bool
+    radius*: float
+    typeId*: int32
+    volume*: float
+
+proc getType*(
+  api: Warpy,
+  typeId: int32,
+  language: EsiLanguage = en,
+  ifNoneMatch: string = ""
+): WarpyResponse[Type] =
+  ## get information for a type
+  let resp = api.get("/universe/types/" & $typeId & "?language=" & $language, ifNoneMatch)
+  result = newWarpyResponse[Type](resp)
