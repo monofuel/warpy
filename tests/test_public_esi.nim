@@ -100,6 +100,56 @@ suite "Public ESI API":
       assert resp.body.get.graphicId == 42
       assert resp.body.get.sofHullName == "cc3_t1"
 
+    test "/universe/groups":
+      let api = newWarpy()
+      let resp = api.getGroups()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
+    test "/universe/groups/26":
+      let api = newWarpy()
+      let resp = api.getGroup(26)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.groupId == 26
+      assert resp.body.get.name == "Cruiser"
+
+    test "/universe/ids":
+      let api = newWarpy()
+      let resp = api.bulkNamesToIds(@["Caracal", "Muninn"])
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.inventoryTypes.len == 2
+      assert resp.body.get.inventoryTypes[0].id == 621
+      assert resp.body.get.inventoryTypes[0].name == "Caracal"
+      assert resp.body.get.inventoryTypes[1].id == 12015
+      assert resp.body.get.inventoryTypes[1].name == "Muninn"
+
+#       {
+#   "characters": [
+#     {
+#       "id": 95261047,
+#       "name": "Caracal"
+#     },
+#     {
+#       "id": 219948150,
+#       "name": "Muninn"
+#     }
+#   ],
+#   "inventory_types": [
+#     {
+#       "id": 621,
+#       "name": "Caracal"
+#     },
+#     {
+#       "id": 12015,
+#       "name": "Muninn"
+#     }
+#   ]
+# }
+      
+
   suite "Meta":
     test "/verify":
       let api = newWarpy()

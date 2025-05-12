@@ -43,9 +43,9 @@
   - [x] factions
   - [x] graphics
   - [x] graphic
-  - [ ] groups
-  - [ ] group
-  - [ ] ids
+  - [x] groups
+  - [x] group
+  - [x] ids
   - [ ] moons
   - [ ] names (ids)
   - [ ] planets

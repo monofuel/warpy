@@ -96,6 +96,28 @@ proc get*(
     )
   result = resp
 
+proc post*(
+  api: Warpy,
+  path: string,
+  body: string,
+  ifNoneMatch: string = ""
+): Response =
+  ## make a POST request to the ESI API.
+  var headers: HttpHeaders
+  headers["User-Agent"] = api.userAgent
+  headers["Accept"] = "application/json"
+  headers["Content-Type"] = "application/json"
+
+  echo body
+
+  let resp = api.curly.post(api.baseUrl & path, headers, body, api.curlTimeout)
+  if resp.code != 200:
+    raise newException(
+      WarpyError,
+      &"API call {path} failed: {resp.code} {resp.body}"
+    )
+  result = resp
+
 proc newWarpyResponse*[T](resp: Response): WarpyResponse[T] =
   ## Build a warpy response based on the curly response.
   ## pull out all the standard headers, and for a 200 response, parse the body as json.

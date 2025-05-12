@@ -1,4 +1,4 @@
-import std/[options], curly, jsony, ../core
+import std/[options, json], curly, jsony, ../core
 
 type
   Ancestry* = ref object
@@ -159,3 +159,60 @@ proc getGraphic*(
   ## get graphic information
   let resp = api.get("/universe/graphics/" & $graphicId, ifNoneMatch)
   result = newWarpyResponse[Graphic](resp)
+
+
+proc getGroups*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[int32]] =
+  ## get list of item group IDs
+  let resp = api.get("/universe/groups", ifNoneMatch)
+  result = newWarpyResponse[seq[int32]](resp)
+
+type
+  Group* = ref object
+    categoryId*: int32
+    groupId*: int32
+    name*: string
+    published*: bool
+    types*: seq[int32]
+
+proc getGroup*(
+  api: Warpy,
+  groupId: int32,
+  language: EsiLanguage = en,
+  ifNoneMatch: string = ""
+): WarpyResponse[Group] =
+  ## get item group information
+  let resp = api.get("/universe/groups/" & $groupId & "?language=" & $language, ifNoneMatch)
+  result = newWarpyResponse[Group](resp)
+
+type
+  NameToId* = ref object
+    id*: int32
+    name*: string
+  BulkNamesToIds* = ref object
+    agents*: seq[NameToId]
+    characters*: seq[NameToId]
+    constellations*: seq[NameToId]
+    corporations*: seq[NameToId]
+    factions*: seq[NameToId]
+    inventoryTypes*: seq[NameToId]
+    regions*: seq[NameToId]
+    stations*: seq[NameToId]
+    systems*: seq[NameToId]
+
+proc bulkNamesToIds*(
+  api: Warpy,
+  names: seq[string],
+  language: EsiLanguage = en
+): WarpyResponse[BulkNamesToIds] =
+  ## bulk get item IDs from a list of names.
+  ## any names that do not have a match will be omitted from the response.
+
+  assert names.len > 0
+  assert names.len <= 500
+
+  # POST /universe/ids/
+  let resp = api.post("/universe/ids?language=" & $language, toJson(names))
+  result = newWarpyResponse[BulkNamesToIds](resp)
