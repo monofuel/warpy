@@ -211,6 +211,19 @@ suite "Public ESI API":
       assert resp.body.isSome
       assert resp.body.get.len > 0
 
+    test "/universe/systems":
+      let resp = api.getSystems()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
+    test "/universe/systems/30001401":
+      let resp = api.getSystem(30001401)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.systemId == 30001401
+      assert resp.body.get.name == "Nonni"
+
   suite "Meta":
     test "/verify":
       let resp = api.ping()

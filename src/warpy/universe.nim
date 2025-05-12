@@ -440,3 +440,40 @@ proc getSystemKills*(
   ## systems without any kills are not included.
   let resp = api.get("/universe/system_kills", ifNoneMatch)
   result = newWarpyResponse[GetSystemKills](resp)
+
+
+proc getSystems*(
+  api: Warpy,
+  ifNoneMatch: string = ""
+): WarpyResponse[seq[int32]] =
+  ## get all solar system IDs
+  let resp = api.get("/universe/systems", ifNoneMatch)
+  result = newWarpyResponse[seq[int32]](resp)
+
+type
+  Planet* = ref object
+    asteroidBelts*: seq[int32]
+    moons*: seq[int32]
+    planetId*: int32
+    
+  System* = ref object
+    constellationId*: int32
+    name*: string
+    planets*: seq[Planet]
+    position*: EsiPosition
+    securityClass*: string
+    securityStatus*: float
+    starId*: int32
+    stargates*: seq[int32]
+    stations*: seq[int32]
+    systemId*: int32
+  GetSystems* = seq[System]
+
+proc getSystem*(
+  api: Warpy,
+  systemId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[System] =
+  ## get information for a solar system
+  let resp = api.get("/universe/systems/" & $systemId, ifNoneMatch)
+  result = newWarpyResponse[System](resp)
