@@ -250,7 +250,7 @@ proc bulkIdsToNames*(
 
   assert ids.len > 0
   assert ids.len <= 1000
-   
+
   let resp = api.post("/universe/names/", toJson(ids))
   result = newWarpyResponse[BulkIdsToNames](resp)
 
@@ -367,7 +367,7 @@ type
     stationId*: int32
     systemId*: int32
     typeId*: int32
-    
+
 proc getStation*(
   api: Warpy,
   stationId: int32,
@@ -455,7 +455,7 @@ type
     asteroidBelts*: seq[int32]
     moons*: seq[int32]
     planetId*: int32
-    
+
   System* = ref object
     constellationId*: int32
     name*: string
@@ -521,3 +521,17 @@ proc getType*(
   ## get information for a type
   let resp = api.get("/universe/types/" & $typeId & "?language=" & $language, ifNoneMatch)
   result = newWarpyResponse[Type](resp)
+
+type
+  Schematic* = ref object
+    schematicName*: string  # Name of the schematic.
+    cycleTime*: int32       # Time in seconds to process a run.
+
+proc getSchematic*(
+  api: Warpy,
+  schematicId: int32,
+  ifNoneMatch: string = ""
+): WarpyResponse[Schematic] =
+  ## Get information on a planetary factory schematic.
+  let resp = api.get("/universe/schematics/" & $schematicId, ifNoneMatch)
+  result = newWarpyResponse[Schematic](resp)

@@ -235,3 +235,11 @@ suite "Universe":
     assert resp.body.get.typeId == 621
     assert resp.body.get.name == "Caracal"
 
+  test "/universe/schematics/{schematic_id}":
+    # Test with schematic ID 65 (Bacteria).
+    let resp = api.getSchematic(65)
+    assert resp.code == 200
+    assert resp.body.isSome
+    assert resp.body.get.schematicName != ""
+    assert resp.body.get.cycleTime > 0
+

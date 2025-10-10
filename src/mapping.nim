@@ -97,5 +97,12 @@ const apiMappings*: seq[ApiMapping] = @[
 
   # Routes
   ApiMapping(httpMethod: "GET", path: "/route/{origin}/{destination}", nimProc: "getRoute"),
+
+  # Meta
+  ApiMapping(httpMethod: "GET", path: "/meta/changelog", nimProc: "getChangelog"),
+  ApiMapping(httpMethod: "GET", path: "/meta/compatibility-dates", nimProc: "getCompatibilityDates"),
+
+  # Planetary Interaction
+  ApiMapping(httpMethod: "GET", path: "/universe/schematics/{schematic_id}", nimProc: "getSchematic"),
 ]
 

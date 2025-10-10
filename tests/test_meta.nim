@@ -1,5 +1,5 @@
 import
-  std/[unittest, options],
+  std/[unittest, options, tables],
   warpy
 
 suite "Meta":
@@ -26,4 +26,21 @@ suite "Meta":
     assert resp.body.get.len > 0
     # Sanity check that latest exists.
     assert resp.body.get.find("latest") != -1
+
+  test "/meta/changelog":
+    let resp = api.getChangelog()
+    assert resp.code == 200
+    assert resp.body.isSome
+    # Changelog is a table, verify it has entries.
+    var hasEntries = false
+    for key, value in resp.body.get.changelog:
+      hasEntries = true
+      break
+    assert hasEntries
+
+  test "/meta/compatibility-dates":
+    let resp = api.getCompatibilityDates()
+    assert resp.code == 200
+    assert resp.body.isSome
+    assert resp.body.get.compatibilityDates.len > 0
 
