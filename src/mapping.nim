@@ -89,5 +89,10 @@ const apiMappings*: seq[ApiMapping] = @[
   ApiMapping(httpMethod: "GET", path: "/wars", nimProc: "getWars"),
   ApiMapping(httpMethod: "GET", path: "/wars/{war_id}", nimProc: "getWar"),
   ApiMapping(httpMethod: "GET", path: "/wars/{war_id}/killmails", nimProc: "getWarKillmails"),
+
+  # Sovereignty
+  ApiMapping(httpMethod: "GET", path: "/sovereignty/campaigns", nimProc: "getSovereigntyCampaigns"),
+  ApiMapping(httpMethod: "GET", path: "/sovereignty/map", nimProc: "getSovereigntyMap"),
+  ApiMapping(httpMethod: "GET", path: "/sovereignty/structures", nimProc: "getSovereigntyStructures"),
 ]
 
