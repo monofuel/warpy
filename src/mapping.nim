@@ -84,5 +84,10 @@ const apiMappings*: seq[ApiMapping] = @[
   # Universe - Types
   ApiMapping(httpMethod: "GET", path: "/universe/types", nimProc: "getTypes"),
   ApiMapping(httpMethod: "GET", path: "/universe/types/{type_id}", nimProc: "getType"),
+
+  # Wars
+  ApiMapping(httpMethod: "GET", path: "/wars", nimProc: "getWars"),
+  ApiMapping(httpMethod: "GET", path: "/wars/{war_id}", nimProc: "getWar"),
+  ApiMapping(httpMethod: "GET", path: "/wars/{war_id}/killmails", nimProc: "getWarKillmails"),
 ]
 

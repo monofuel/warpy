@@ -31,20 +31,20 @@ suite "Public ESI API":
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
-    
+
     test "/universe/asteroid_belts":
       const asteroidBeltId = 40089226 # Belt in the Nonni system
       let resp = api.getAsteroidBelts(asteroidBeltId)
       assert resp.code == 200
       assert resp.body.isSome
       assert toJson(resp.body.get) == """{"name":"Nonni II - Asteroid Belt 1","position":{"x":-65319198720.0,"y":9657507840.0,"z":155492229120.0},"systemId":30001401}"""
-    
-    test "/universe/bloodlines": 
+
+    test "/universe/bloodlines":
       let resp = api.getBloodlines()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
-    
+
     test "/universe/categories":
       let resp = api.getItemCategories()
       assert resp.code == 200
@@ -65,7 +65,7 @@ suite "Public ESI API":
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
-      
+
     test "/universe/constellations/20000205":
       let resp = api.getConstellation(20000205)
       assert resp.code == 200
@@ -80,7 +80,7 @@ suite "Public ESI API":
       assert resp.body.get.len > 0
 
     test "/universe/graphics":
-      let resp = api.getGraphics()  
+      let resp = api.getGraphics()
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
@@ -133,7 +133,7 @@ suite "Public ESI API":
       assert resp.body.get[1].id == 12015
       assert resp.body.get[1].name == "Muninn"
       assert resp.body.get[1].category == "inventory_type"
-      
+
     test "/universe/planets/40089224":
       let resp = api.getPlanet(40089224)
       assert resp.code == 200
@@ -146,7 +146,7 @@ suite "Public ESI API":
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get.len > 0
-      
+
     test "/universe/regions":
       let resp = api.getRegions()
       assert resp.code == 200
@@ -197,7 +197,7 @@ suite "Public ESI API":
     #   assert resp.code == 200
     #   assert resp.body.isSome
     #   echo toJson(resp.body.get.name)
-      
+
     test "/universe/system_jumps":
       let resp = api.getSystemJumps()
       assert resp.code == 200
@@ -229,7 +229,7 @@ suite "Public ESI API":
       assert resp.body.isSome
       assert resp.body.get.len > 0
       assert resp.xpages > 5 # should be about >50 pages or so
-    
+
     test "/universe/types all pages":
       var page = 1.int32
       var resp = api.getTypes(page)
@@ -259,7 +259,7 @@ suite "Public ESI API":
       assert resp.code == 200
       assert resp.body.isSome
       assert resp.body.get == "ok"
-    
+
     test "/status.json":
       let resp = api.statusJson()
       assert resp.code == 200
@@ -273,3 +273,49 @@ suite "Public ESI API":
       assert resp.body.get.len > 0
       # sanity check that latest exists
       assert resp.body.get.find("latest") != -1
+
+  suite "Wars":
+    test "/wars":
+      let resp = api.getWars()
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+
+    test "/wars with max_war_id":
+      let resp = api.getWars(maxWarId = 500000)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.len > 0
+      # All returned war IDs should be less than or equal to max_war_id.
+      for warId in resp.body.get:
+        assert warId <= 500000
+
+    test "/wars/{war_id}":
+      # Get a recent war ID first.
+      let warsResp = api.getWars()
+      assert warsResp.code == 200
+      assert warsResp.body.isSome
+      assert warsResp.body.get.len > 0
+
+      let warId = warsResp.body.get[0]
+      let resp = api.getWar(warId)
+      assert resp.code == 200
+      assert resp.body.isSome
+      assert resp.body.get.id == warId
+      assert resp.body.get.declared != ""
+      assert resp.body.get.aggressor != nil
+      assert resp.body.get.defender != nil
+
+    test "/wars/{war_id}/killmails":
+      # Get a recent war ID first.
+      let warsResp = api.getWars()
+      assert warsResp.code == 200
+      assert warsResp.body.isSome
+      assert warsResp.body.get.len > 0
+
+      let warId = warsResp.body.get[0]
+      let resp = api.getWarKillmails(warId)
+      assert resp.code == 200
+      assert resp.body.isSome
+      # May not have killmails, but the response should be valid.
+      assert resp.body.get.len >= 0

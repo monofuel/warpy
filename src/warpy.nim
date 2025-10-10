@@ -1,3 +1,3 @@
-import ./core, ./warpy/[status, universe, meta]
-export core, status, universe, meta
+import ./core, ./warpy/[status, universe, meta, wars]
+export core, status, universe, meta, wars
 
