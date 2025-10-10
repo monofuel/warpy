@@ -1,5 +1,5 @@
 import
-  std/[os, tables, sets, strutils, algorithm, parseopt],
+  std/[os, tables, sets, strutils, algorithm, parseopt, json],
   jsony,
   ../src/[types, mapping]
 
@@ -10,10 +10,12 @@ proc printUsage() =
   echo ""
   echo "Options:"
   echo "  --list-missing    List all unimplemented operations"
+  echo "  --public-only     Only show public API operations (no auth required)"
   echo "  --help            Show this help message"
 
 proc main() =
   var listMissing = false
+  var publicOnly = false
 
   # Parse command-line arguments.
   var p = initOptParser()
@@ -23,6 +25,8 @@ proc main() =
       case key
       of "list-missing":
         listMissing = true
+      of "public-only":
+        publicOnly = true
       of "help":
         printUsage()
         quit(0)
@@ -69,6 +73,14 @@ proc main() =
                               ("PUT", pathItem.put), ("DELETE", pathItem.`delete`),
                               ("PATCH", pathItem.patch)]:
       if op.operationId != "":
+        # Check if operation is public (no auth required).
+        let isPublic = op.security.isNil or op.security.kind == JNull or
+                       (op.security.kind == JArray and op.security.len == 0)
+
+        # Skip if filtering for public only and this requires auth.
+        if publicOnly and not isPublic:
+          continue
+
         totalOps += 1
         let key = methodName & " " & path
         let isImplemented = key in implementedOps
@@ -84,6 +96,8 @@ proc main() =
             unimplementedOps.add((tag: tag, httpMethod: methodName, path: path, operationId: op.operationId))
 
   echo "\nImplementation Status:"
+  if publicOnly:
+    echo "  Filtering: Public operations only (no auth required)"
   echo "  Total operations in API: ", totalOps
   echo "  Implemented operations: ", implementedOps.len
   echo "  Coverage: ", (implementedOps.len.float / totalOps.float * 100.0).formatFloat(ffDecimal, 1), "%"
