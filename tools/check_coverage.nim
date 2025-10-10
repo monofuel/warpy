@@ -65,8 +65,8 @@ proc main() =
   var unimplementedOps: seq[tuple[tag: string, httpMethod: string, path: string, operationId: string]]
 
   for path, pathItem in spec.paths:
-    for (methodName, op) in [("GET", pathItem.get), ("POST", pathItem.post),
-                              ("PUT", pathItem.put), ("DELETE", pathItem.delete),
+    for (methodName, op) in [("GET", pathItem.`get`), ("POST", pathItem.post),
+                              ("PUT", pathItem.put), ("DELETE", pathItem.`delete`),
                               ("PATCH", pathItem.patch)]:
       if op.operationId != "":
         totalOps += 1

@@ -3,6 +3,19 @@ import
   jsony
 
 type
+  ParameterOrRef* = object
+    `$ref`*: string
+    name*: string
+    `in`*: string
+    description*: string
+    required*: bool
+    schema*: JsonNode
+
+  ResponseContent* = object
+    description*: string
+    content*: JsonNode
+    headers*: JsonNode
+
   OpenApiSpec* = object
     openapi*: string
     info*: JsonNode
@@ -12,10 +25,10 @@ type
     tags*: JsonNode
 
   PathItem* = object
-    get*: Operation
+    `get`*: Operation
     post*: Operation
     put*: Operation
-    delete*: Operation
+    `delete`*: Operation
     patch*: Operation
 
   Operation* = object
@@ -23,8 +36,8 @@ type
     summary*: string
     description*: string
     tags*: seq[string]
-    parameters*: JsonNode
+    parameters*: seq[ParameterOrRef]
     requestBody*: JsonNode
-    responses*: JsonNode
+    responses*: Table[string, ResponseContent]
     security*: JsonNode
 
