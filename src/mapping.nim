@@ -104,5 +104,13 @@ const apiMappings*: seq[ApiMapping] = @[
 
   # Planetary Interaction
   ApiMapping(httpMethod: "GET", path: "/universe/schematics/{schematic_id}", nimProc: "getSchematic"),
+
+  # Market
+  ApiMapping(httpMethod: "GET", path: "/markets/groups", nimProc: "getMarketGroups"),
+  ApiMapping(httpMethod: "GET", path: "/markets/groups/{market_group_id}", nimProc: "getMarketGroup"),
+  ApiMapping(httpMethod: "GET", path: "/markets/prices", nimProc: "getMarketPrices"),
+  ApiMapping(httpMethod: "GET", path: "/markets/{region_id}/types", nimProc: "getMarketTypes"),
+  ApiMapping(httpMethod: "GET", path: "/markets/{region_id}/orders", nimProc: "getMarketOrders"),
+  ApiMapping(httpMethod: "GET", path: "/markets/{region_id}/history", nimProc: "getMarketHistory"),
 ]
 
