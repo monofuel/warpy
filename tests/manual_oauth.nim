@@ -137,58 +137,51 @@ proc decodeJwt(accessToken: string): JwtPayload =
   result = fromJson(decoded, JwtPayload)
 
 proc runAuthenticatedTests(accessToken: string, characterId: int32) =
-  ## Run safe read-only tests against authenticated endpoints.
+  ## Run safe read-only tests against authenticated endpoints using warpy.
+  let api = newWarpy(accessToken = accessToken)
+
   echo ""
   echo "=== Authenticated Endpoint Tests ==="
   echo &"Character ID: {characterId}"
   echo ""
 
-  # For now, test directly with curly since warpy doesn't have auth support yet.
-  # This validates the token works and shows what data is available.
-  let curl = newCurly()
-  var headers: curly.HttpHeaders
-  headers["Authorization"] = &"Bearer {accessToken}"
-  headers["User-Agent"] = "warpy"
-  headers["Accept"] = "application/json"
-
   type TestEndpoint = tuple[name: string, path: string]
   let endpoints: seq[TestEndpoint] = @[
-    ("Location", &"/latest/characters/{characterId}/location/"),
-    ("Online", &"/latest/characters/{characterId}/online/"),
-    ("Ship", &"/latest/characters/{characterId}/ship/"),
-    ("Skills", &"/latest/characters/{characterId}/skills/"),
-    ("Skill Queue", &"/latest/characters/{characterId}/skillqueue/"),
-    ("Wallet", &"/latest/characters/{characterId}/wallet/"),
-    ("Assets", &"/latest/characters/{characterId}/assets/"),
-    ("Implants", &"/latest/characters/{characterId}/implants/"),
-    ("Clones", &"/latest/characters/{characterId}/clones/"),
-    ("Blueprints", &"/latest/characters/{characterId}/blueprints/"),
-    ("Industry Jobs", &"/latest/characters/{characterId}/industry/jobs/"),
-    ("Contracts", &"/latest/characters/{characterId}/contracts/"),
-    ("Fittings", &"/latest/characters/{characterId}/fittings/"),
-    ("Loyalty Points", &"/latest/characters/{characterId}/loyalty/points/"),
-    ("Mail", &"/latest/characters/{characterId}/mail/"),
-    ("Calendar", &"/latest/characters/{characterId}/calendar/"),
-    ("Medals", &"/latest/characters/{characterId}/medals/"),
-    ("Agents Research", &"/latest/characters/{characterId}/agents_research/"),
-    ("Fatigue", &"/latest/characters/{characterId}/fatigue/"),
-    ("Contacts", &"/latest/characters/{characterId}/contacts/"),
-    ("Recent Killmails", &"/latest/characters/{characterId}/killmails/recent/"),
-    ("FW Stats", &"/latest/characters/{characterId}/fw/stats/"),
-    ("Mining", &"/latest/characters/{characterId}/mining/"),
+    ("Location", &"/characters/{characterId}/location/"),
+    ("Online", &"/characters/{characterId}/online/"),
+    ("Ship", &"/characters/{characterId}/ship/"),
+    ("Skills", &"/characters/{characterId}/skills/"),
+    ("Skill Queue", &"/characters/{characterId}/skillqueue/"),
+    ("Wallet", &"/characters/{characterId}/wallet/"),
+    ("Assets", &"/characters/{characterId}/assets/"),
+    ("Implants", &"/characters/{characterId}/implants/"),
+    ("Clones", &"/characters/{characterId}/clones/"),
+    ("Blueprints", &"/characters/{characterId}/blueprints/"),
+    ("Industry Jobs", &"/characters/{characterId}/industry/jobs/"),
+    ("Contracts", &"/characters/{characterId}/contracts/"),
+    ("Fittings", &"/characters/{characterId}/fittings/"),
+    ("Loyalty Points", &"/characters/{characterId}/loyalty/points/"),
+    ("Mail", &"/characters/{characterId}/mail/"),
+    ("Calendar", &"/characters/{characterId}/calendar/"),
+    ("Medals", &"/characters/{characterId}/medals/"),
+    ("Agents Research", &"/characters/{characterId}/agents_research/"),
+    ("Fatigue", &"/characters/{characterId}/fatigue/"),
+    ("Contacts", &"/characters/{characterId}/contacts/"),
+    ("Recent Killmails", &"/characters/{characterId}/killmails/recent/"),
+    ("FW Stats", &"/characters/{characterId}/fw/stats/"),
+    ("Mining", &"/characters/{characterId}/mining/"),
   ]
 
   var passed = 0
   var failed = 0
   for ep in endpoints:
     try:
-      let resp = curl.get("https://esi.evetech.net" & ep.path, headers)
-      if resp.code == 200:
-        echo &"  [OK]   {ep.name} ({resp.body.len} bytes)"
-        passed += 1
-      else:
-        echo &"  [FAIL] {ep.name} -> {resp.code}"
-        failed += 1
+      let resp = api.get(ep.path)
+      echo &"  [OK]   {ep.name} ({resp.body.len} bytes)"
+      passed += 1
+    except WarpyError:
+      echo &"  [FAIL] {ep.name} -> {getCurrentExceptionMsg()}"
+      failed += 1
     except:
       echo &"  [ERR]  {ep.name} -> {getCurrentExceptionMsg()}"
       failed += 1

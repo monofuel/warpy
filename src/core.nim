@@ -12,6 +12,7 @@ type
     endpointVersion*: EndpointVersions
     baseUrl*: string
     userAgent*: string
+    accessToken*: string
     maxInFlight*: int
     curlTimeout*: int
 
@@ -60,6 +61,7 @@ proc newWarpy*(
   host: string = DefaultHost,
   endpointVersion: EndpointVersions = DefaultVersion,
   userAgent: string = DefaultUserAgent,
+  accessToken: string = "",
   maxInFlight: int = 16,
   curlTimeout: int = 60
 ): Warpy =
@@ -70,6 +72,7 @@ proc newWarpy*(
   result.endpointVersion = endpointVersion
   result.baseUrl = host & "/" & $endpointVersion
   result.userAgent = userAgent
+  result.accessToken = accessToken
   result.curlTimeout = curlTimeout
 
 
@@ -84,7 +87,9 @@ proc get*(
   var headers: HttpHeaders
   headers["User-Agent"] = api.userAgent
   headers["Accept"] = "application/json"
-  
+  if api.accessToken != "":
+    headers["Authorization"] = "Bearer " & api.accessToken
+
   if ifNoneMatch != "":
     headers["If-None-Match"] = ifNoneMatch
 
@@ -107,6 +112,8 @@ proc post*(
   headers["User-Agent"] = api.userAgent
   headers["Accept"] = "application/json"
   headers["Content-Type"] = "application/json"
+  if api.accessToken != "":
+    headers["Authorization"] = "Bearer " & api.accessToken
 
   let resp = api.curly.post(api.baseUrl & path, headers, body, api.curlTimeout)
   if resp.code != 200:
