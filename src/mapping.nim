@@ -105,6 +105,60 @@ const apiMappings*: seq[ApiMapping] = @[
   # Planetary Interaction
   ApiMapping(httpMethod: "GET", path: "/universe/schematics/{schematic_id}", nimProc: "getSchematic"),
 
+  # Alliance
+  ApiMapping(httpMethod: "GET", path: "/alliances", nimProc: "getAlliances"),
+  ApiMapping(httpMethod: "GET", path: "/alliances/{alliance_id}", nimProc: "getAlliance"),
+  ApiMapping(httpMethod: "GET", path: "/alliances/{alliance_id}/corporations", nimProc: "getAllianceCorporations"),
+  ApiMapping(httpMethod: "GET", path: "/alliances/{alliance_id}/icons", nimProc: "getAllianceIcons"),
+
+  # Character
+  ApiMapping(httpMethod: "GET", path: "/characters/{character_id}", nimProc: "getCharacter"),
+  ApiMapping(httpMethod: "POST", path: "/characters/affiliation", nimProc: "postCharacterAffiliation"),
+  ApiMapping(httpMethod: "GET", path: "/characters/{character_id}/corporationhistory", nimProc: "getCharacterCorporationHistory"),
+  ApiMapping(httpMethod: "GET", path: "/characters/{character_id}/portrait", nimProc: "getCharacterPortrait"),
+
+  # Corporation
+  ApiMapping(httpMethod: "GET", path: "/corporations/{corporation_id}", nimProc: "getCorporation"),
+  ApiMapping(httpMethod: "GET", path: "/corporations/npccorps", nimProc: "getNpcCorps"),
+  ApiMapping(httpMethod: "GET", path: "/corporations/{corporation_id}/alliancehistory", nimProc: "getCorporationAllianceHistory"),
+  ApiMapping(httpMethod: "GET", path: "/corporations/{corporation_id}/icons", nimProc: "getCorporationIcons"),
+
+  # Incursions
+  ApiMapping(httpMethod: "GET", path: "/incursions", nimProc: "getIncursions"),
+
+  # Insurance
+  ApiMapping(httpMethod: "GET", path: "/insurance/prices", nimProc: "getInsurancePrices"),
+
+  # Industry
+  ApiMapping(httpMethod: "GET", path: "/industry/facilities", nimProc: "getIndustryFacilities"),
+  ApiMapping(httpMethod: "GET", path: "/industry/systems", nimProc: "getIndustrySystems"),
+
+  # Contracts
+  ApiMapping(httpMethod: "GET", path: "/contracts/public/{region_id}", nimProc: "getPublicContracts"),
+  ApiMapping(httpMethod: "GET", path: "/contracts/public/bids/{contract_id}", nimProc: "getPublicContractBids"),
+  ApiMapping(httpMethod: "GET", path: "/contracts/public/items/{contract_id}", nimProc: "getPublicContractItems"),
+
+  # Dogma
+  ApiMapping(httpMethod: "GET", path: "/dogma/attributes", nimProc: "getDogmaAttributes"),
+  ApiMapping(httpMethod: "GET", path: "/dogma/attributes/{attribute_id}", nimProc: "getDogmaAttribute"),
+  ApiMapping(httpMethod: "GET", path: "/dogma/effects", nimProc: "getDogmaEffects"),
+  ApiMapping(httpMethod: "GET", path: "/dogma/effects/{effect_id}", nimProc: "getDogmaEffect"),
+  ApiMapping(httpMethod: "GET", path: "/dogma/dynamic/items/{type_id}/{item_id}", nimProc: "getDogmaDynamicItem"),
+
+  # Faction Warfare
+  ApiMapping(httpMethod: "GET", path: "/fw/stats", nimProc: "getFwStats"),
+  ApiMapping(httpMethod: "GET", path: "/fw/leaderboards", nimProc: "getFwLeaderboards"),
+  ApiMapping(httpMethod: "GET", path: "/fw/leaderboards/characters", nimProc: "getFwCharacterLeaderboards"),
+  ApiMapping(httpMethod: "GET", path: "/fw/leaderboards/corporations", nimProc: "getFwCorporationLeaderboards"),
+  ApiMapping(httpMethod: "GET", path: "/fw/systems", nimProc: "getFwSystems"),
+  ApiMapping(httpMethod: "GET", path: "/fw/wars", nimProc: "getFwWars"),
+
+  # Killmails
+  ApiMapping(httpMethod: "GET", path: "/killmails/{killmail_id}/{killmail_hash}", nimProc: "getKillmail"),
+
+  # Loyalty
+  ApiMapping(httpMethod: "GET", path: "/loyalty/stores/{corporation_id}/offers", nimProc: "getLoyaltyOffers"),
+
   # Market
   ApiMapping(httpMethod: "GET", path: "/markets/groups", nimProc: "getMarketGroups"),
   ApiMapping(httpMethod: "GET", path: "/markets/groups/{market_group_id}", nimProc: "getMarketGroup"),

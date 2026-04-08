@@ -6,40 +6,42 @@
 
 ## Endpoints
 
-- [ ] Alliance
+- [x] Alliance
 - [ ] Assets
 - [ ] Calendar
-- [ ] Character
+- [x] Character (public)
 - [ ] Clones
 - [ ] Contacts
-- [ ] Contracts
-- [ ] Corporation
-- [ ] Dogma
-- [ ] Faction Warfare
+- [x] Contracts (public)
+- [x] Corporation (public)
+- [x] Dogma
+- [x] Faction Warfare
 - [ ] Fittings
 - [ ] Fleets
-- [ ] Incursions
-- [ ] Industry
-- [ ] Insurance
-- [ ] Killmails
+- [x] Incursions
+- [x] Industry
+- [x] Insurance
+- [x] Killmails
 - [ ] Location
-- [ ] Loyalty
+- [x] Loyalty
 - [ ] Mail
-- [ ] Market
+- [x] Market
 - [ ] Planetary Interaction
-- [ ] Routes
+- [x] Routes
 - [ ] Search
 - [ ] Skills
-- [ ] Sovereignty
+- [x] Sovereignty
 - [x] Status
 - [x] Universe
 - [ ] User Interface
 - [ ] Wallet
-- [ ] Wars
+- [x] Wars
 
-- [ ] Meta
+- [x] Meta
   - headers (not implementing)
   - [x] ping
-  - [x] status.json
+  - ~~status.json~~ (removed by CCP)
   - [ ] verify
-  - [x] versions
+  - ~~versions~~ (removed by CCP)
+  - [x] changelog
+  - [x] compatibility-dates

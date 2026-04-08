@@ -4,15 +4,6 @@ import
   ../core
 
 type
-  StatusJsonRow* = ref object
-    endpoint*: string
-    `method`*: string
-    route*: string
-    status*: string # "green" "yellow" "red".
-    tags*: seq[string]
-  StatusJson* = seq[StatusJsonRow]
-  Versions* = seq[string]
-
   ChangelogEntry* = ref object
     `method`*: string            # HTTP method of the route.
     path*: string                # Path of the route.
@@ -53,54 +44,6 @@ proc ping*(
   result.cacheControl = resp.headers["Cache-Control"]
   result.body = some(resp.body)
 
-
-proc statusJson*(
-  api: Warpy
-): WarpyResponse[StatusJson] =
-  ## Provides a general health indicator per route and method
-
-  var headers: HttpHeaders
-  headers["User-Agent"] = api.userAgent
-  headers["Accept"] = "application/json"
-
-  let resp = api.curly.get(api.host & "/status.json", headers, api.curlTimeout)
-  if resp.code != 200:
-    raise newException(
-      WarpyError,
-      &"API call /status.json failed: {resp.code} {resp.body}"
-    )
-  result = WarpyResponse[StatusJson]()
-  result.code = resp.code
-  result.expires = resp.headers["Expires"]
-  result.lastModified = resp.headers["Last-Modified"]
-  result.cacheControl = resp.headers["Cache-Control"]
-  result.body = some(resp.body.fromJson(StatusJson))
-
-# verify
-# TODO, verifies the charcter for the authorization token
-
-# versions
-
-proc getVersions*(
-  api: Warpy
-): WarpyResponse[Versions] =
-  ## Get the available versions of the ESI API.
-  var headers: HttpHeaders
-  headers["User-Agent"] = api.userAgent
-  headers["Accept"] = "application/json"
-
-  let resp = api.curly.get(api.host & "/versions", headers, api.curlTimeout)
-  if resp.code != 200:
-    raise newException(
-      WarpyError,
-      &"API call /versions failed: {resp.code} {resp.body}"
-    )
-  result = WarpyResponse[Versions]()
-  result.code = resp.code
-  result.expires = resp.headers["Expires"]
-  result.lastModified = resp.headers["Last-Modified"]
-  result.cacheControl = resp.headers["Cache-Control"]
-  result.body = some(resp.body.fromJson(Versions))
 
 proc getChangelog*(
   api: Warpy,
